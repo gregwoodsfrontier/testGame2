@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import { useState, useEffect } from "react";
 import { IonPhaser, GameInstance } from "@ion-phaser/react";
 import { useWeb3 } from "web3/context";
@@ -7,8 +8,14 @@ import Scenes from "./scenes";
 import io, { Socket } from "socket.io-client";
 import { AavegotchiObject } from "types";
 import { useDiamondCall } from "web3/actions";
+import {Moralis} from "moralis";
+import {appID, serverURL} from '../keys'
 
 const Main = () => {
+
+  Moralis.initialize(appID);
+  Moralis.serverURL = serverURL;
+
   const {
     state: { usersAavegotchis, selectedAavegotchiId, provider },
   } = useWeb3();
@@ -42,6 +49,13 @@ const Main = () => {
           gravity: { y: 0 },
           debug: process.env.NODE_ENV === "development",
         },
+      },
+      plugins: {
+        scene: [{
+          key: 'rexUI',
+          plugin: UIPlugin,
+          mapping: 'rexUI'
+        }]
       },
       scale: {
         mode: Phaser.Scale.NONE,

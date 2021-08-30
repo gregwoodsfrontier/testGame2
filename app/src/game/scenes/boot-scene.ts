@@ -4,6 +4,7 @@ import { assets, SpritesheetAsset } from "game/assets";
 import { constructSpritesheet } from "../helpers/spritesheet";
 import { customiseSvg } from "helpers/aavegotchi";
 import { Socket } from "socket.io-client";
+import { start } from "repl";
 
 interface AavegotchiWithSvg extends AavegotchiObject {
   svg: string;
@@ -14,6 +15,8 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   visible: false,
   key: "Boot",
 };
+
+const startingScene = "Title";
 
 /**
  * The initial scene that loads all necessary assets to the game.
@@ -93,7 +96,7 @@ export class BootScene extends Phaser.Scene {
    */
   private startGame = () => {
     if (this.assetsLoaded && this.connected) {
-      this.scene.start("Game", { selectedGotchi: this.gotchi });
+      this.scene.start(startingScene, { selectedGotchi: this.gotchi });
     }
   };
 

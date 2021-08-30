@@ -30,10 +30,10 @@ export const GotchiSVG = ({ tokenId, options, lazyloadIn }: Props) => {
     } catch (error) {
       console.log(error);
 
-      dispatch({
+     /*  dispatch({
         type: "SET_ERROR",
         error
-      })
+      }) */
     }
   }
 

@@ -14,6 +14,7 @@ export const Web3Context = createContext<{
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ethereum: any;
   }
 }
@@ -34,6 +35,7 @@ const updateAavegotchis = async (dispatch: React.Dispatch<Action>, owner: string
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const connectToNetwork = async (dispatch: React.Dispatch<Action>, eth: any) => {
   if (process.env.REACT_APP_OFFCHAIN) return;
 

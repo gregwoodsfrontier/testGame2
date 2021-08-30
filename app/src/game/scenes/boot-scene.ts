@@ -143,6 +143,9 @@ export class BootScene extends Phaser.Scene {
     }
 
     switch (file.type) {
+      case "TILEMAPJSON":
+        this.load.tilemapTiledJSON(file.key, file.src);
+        break;
       case "IMAGE":
         this.load.image(file.key, file.src);
         break;

@@ -6,31 +6,44 @@ interface Props {
   frame?: number;
 }
 
-export class Player extends Phaser.GameObjects.Sprite {
+export class Player {
   private cursorKeys?: Phaser.Types.Input.Keyboard.CursorKeys;
   public speed = 200;
+  public sprite: Phaser.GameObjects.Sprite
+  public scene: Phaser.Scene
 
   constructor({ scene, x, y, key }: Props) {
-    super(scene, x, y, key);
+    this.scene = scene;
+    this.sprite = scene.physics.add.sprite(x, y, key);
 
     // sprite
-    this.setOrigin(0, 0);
+    this.sprite.setOrigin(0, 0).setScale(0.8);
 
     // Add animations
-    this.anims.create({
+    this.sprite.anims.create({
       key: 'idle',
-      frames: this.anims.generateFrameNumbers(key || '', { start: 0, end: 1 }),
+      frames: this.sprite.anims.generateFrameNumbers(key || '', { start: 0, end: 1 }),
       frameRate: 2,
       repeat: -1,
     });
 
     // physics
-    this.scene.physics.world.enable(this);
+    //this.scene.physics.world.enable(this.sprite);
 
     // input
     this.cursorKeys = scene.input.keyboard.createCursorKeys();
 
-    this.scene.add.existing(this);
+    this.scene.add.existing(this.sprite);
+    const body = this.sprite.body as Phaser.Physics.Arcade.Body
+    body.setSize(this.sprite.displayWidth*0.7, this.sprite.displayHeight*0.8);
+    /* const controls = new Phaser.Cameras.Controls.FixedKeyControl({
+      camera: camera,
+      left: this.cursorKeys.left,
+      right: this.cursorKeys.right,
+      up: this.cursorKeys.up,
+      down: this.cursorKeys.down,
+      speed: 0.5
+    }); */
   }
 
   update(): void {
@@ -40,32 +53,34 @@ export class Player extends Phaser.GameObjects.Sprite {
     switch (true) {
       case this.cursorKeys?.left.isDown:
         velocity.x -= 1;
-        this.anims.play('idle', false);
+        this.sprite.anims.play('idle', false);
         break;
       case this.cursorKeys?.right.isDown:
         velocity.x += 1;
-        this.anims.play('idle', false);
+        this.sprite.anims.play('idle', false);
         break;
       default:
-        this.anims.play('idle', true);
+        this.sprite.anims.play('idle', true);
     }
 
     // Vertical movement
     switch (true) {
       case this.cursorKeys?.down.isDown:
         velocity.y += 1;
-        this.anims.play('idle', false);
+        this.sprite.anims.play('idle', false);
         break;
       case this.cursorKeys?.up.isDown:
         velocity.y -= 1;
-        this.anims.play('idle', false);
+        this.sprite.anims.play('idle', false);
         break;
       default:
-        this.anims.play('idle', true);
+        this.sprite.anims.play('idle', true);
     }
 
     // We normalize the velocity so that the player is always moving at the same speed, regardless of direction.
     const normalizedVelocity = velocity.normalize();
-    (this.body as Phaser.Physics.Arcade.Body).setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
+    //this.sprite.body = new Phaser.Physics.Arcade.Body(this.scene.physics.world, this.sprite);
+    //this.sprite.body.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
+    (this.sprite.body as Phaser.Physics.Arcade.Body).setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
   }
 }
